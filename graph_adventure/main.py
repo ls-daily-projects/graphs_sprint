@@ -11,7 +11,7 @@ import random
 
 # Load world
 world = World()
-selected_graph = cross
+selected_graph = hallway
 traversal_path = []
 
 room_graph = RoomGraph(selected_graph)
@@ -22,7 +22,7 @@ def print_room_ids(room):
     traversed_rooms.append(room.id)
 
 
-print(room_graph.traverse_depth_first(cb=print_room_ids))
+print(room_graph.traverse_breadth_first(cb=print_room_ids))
 
 world.loadGraph(selected_graph)
 world.printRooms()
