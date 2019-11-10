@@ -1,4 +1,5 @@
 from .room import Room
+from .stack import Stack
 
 
 class RoomGraph():
@@ -29,13 +30,13 @@ class RoomGraph():
 
     def traverse_depth_first(self, starting_room=0, cb=print):
         output = []
-        room_stack = []
+        room_stack = Stack()
         visited = set()
 
-        room_stack.append(self.get_room_with_id(0))
+        room_stack.push(self.get_room_with_id(0))
 
         while len(room_stack) != 0:
-            current_room = room_stack.pop()
+            current_room = room_stack.pop().value
 
             if current_room.id not in visited:
                 output.append(current_room.id)
@@ -43,5 +44,5 @@ class RoomGraph():
                 visited.add(current_room.id)
 
                 for neighbor_id in current_room.neighbors:
-                    room_stack.append(self.get_room_with_id(neighbor_id))
+                    room_stack.push(self.get_room_with_id(neighbor_id))
         return output
