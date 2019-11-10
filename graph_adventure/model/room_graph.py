@@ -67,3 +67,25 @@ class RoomGraph():
                     room_queue.enqueue(self.get_room_with_id(neighbor_id))
 
         return output
+
+    def traverse_breadth_first_shortest_path(self, starting_room=0, cb=print):
+        output = []
+        room_queue = Queue()
+        visited = set()
+
+        room_queue.enqueue((self.get_room_with_id(starting_room), None))
+
+        while not room_queue.is_empty:
+            current_room, parent_room = room_queue.dequeue().value
+
+            for neighbor_id in current_room.neighbors:
+                if neighbor_id in visited:
+                    output.append(
+                        (current_room.id, parent_room.id))
+                    cb(current_room)
+                    continue
+                neighbor = self.get_room_with_id(neighbor_id)
+                room_queue.enqueue((neighbor, current_room))
+                visited.add(current_room.id)
+
+        return output
