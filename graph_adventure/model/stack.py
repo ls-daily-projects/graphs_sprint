@@ -28,6 +28,9 @@ class Stack():
 
         return ", ".join([str(node) for node in output])
 
+    def __len__(self):
+        return self.length
+
     def push(self, value):
         new_node = StackNode(value)
 

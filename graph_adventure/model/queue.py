@@ -27,6 +27,9 @@ class Queue():
 
         return ", ".join([str(node) for node in output])
 
+    def __len__(self):
+        return self.length
+
     def enqueue(self, value):
         new_node = QueueNode(value)
 
