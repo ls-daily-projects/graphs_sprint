@@ -36,7 +36,7 @@ class RoomGraph():
 
         room_stack.push(self.get_room_with_id(starting_room))
 
-        while len(room_stack) != 0:
+        while not room_stack.is_empty:
             current_room = room_stack.pop().value
 
             if current_room.id not in visited:
@@ -55,7 +55,7 @@ class RoomGraph():
 
         room_queue.enqueue(self.get_room_with_id(starting_room))
 
-        while len(room_queue) != 0:
+        while not room_queue.is_empty:
             current_room = room_queue.dequeue().value
 
             if current_room.id not in visited:

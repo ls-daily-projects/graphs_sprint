@@ -30,6 +30,10 @@ class Queue():
     def __len__(self):
         return self.length
 
+    @property
+    def is_empty(self):
+        return self.length == 0
+
     def enqueue(self, value):
         new_node = QueueNode(value)
 

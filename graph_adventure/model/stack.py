@@ -31,6 +31,10 @@ class Stack():
     def __len__(self):
         return self.length
 
+    @property
+    def is_empty(self):
+        return self.length == 0
+
     def push(self, value):
         new_node = StackNode(value)
 
