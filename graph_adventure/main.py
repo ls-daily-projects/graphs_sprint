@@ -2,7 +2,7 @@ from room import Room
 from player import Player
 from world import World
 
-from room_graphs import hallway, cross, fish, trident_fish, five_hundy
+from sample_graphs import hallway, cross, fish, trident_fish, five_hundy
 from model import RoomGraph
 
 from traversal_test import test_traversal
