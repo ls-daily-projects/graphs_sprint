@@ -24,3 +24,9 @@ class Room():
     @property
     def neighbors(self):
         return [neighbor_id for neighbor_id in self.edges.values()]
+
+    def direction_for_room_id(self, room_id):
+        for direction, neighbor_id in self.edges.items():
+            if neighbor_id == room_id:
+                return direction
+        return None
