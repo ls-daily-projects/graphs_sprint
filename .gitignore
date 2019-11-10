@@ -1,0 +1,5 @@
+*.pyc
+graph_adventure/__pycache__/*
+map.txt
+.vscode/
+__pycache__
