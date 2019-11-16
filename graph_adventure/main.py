@@ -11,24 +11,18 @@ import random
 
 # Load world
 world = World()
-selected_graph = hallway
-traversal_path = []
+selected_graph = fish
 
 room_graph = RoomGraph(selected_graph)
-traversed_rooms = []
+room_paths = room_graph.traverse_backtracking_depth_first()
+traversal_path = room_graph.rooms_to_paths(room_paths)
 
-
-def print_room_ids(room):
-    traversed_rooms.append(room.id)
-
-
-print(room_graph.traverse_breadth_first(cb=print_room_ids))
 
 world.loadGraph(selected_graph)
 world.printRooms()
 player = Player("Name", world.startingRoom)
 
-
+print(f"Traversal Path:\n----{traversal_path}")
 test_traversal(world, player, selected_graph, traversal_path)
 
 #######
