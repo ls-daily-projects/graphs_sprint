@@ -1,6 +1,5 @@
+from data_structures import Stack, Queue
 from .room import Room
-from .stack import Stack
-from .queue import Queue
 
 
 class RoomGraph():
