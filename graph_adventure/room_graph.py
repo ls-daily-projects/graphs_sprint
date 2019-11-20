@@ -52,6 +52,9 @@ class RoomGraph():
         return [(neighbor, direction) for neighbor,
                 direction in neighbors if neighbor not in visited]
 
+    def select_neighbor(self, neighbors):
+        return random.choice(neighbors)
+
     def get_reverse_direction(self, direction):
         return ExitDirection(self.reverse_direction[direction.value])
 
@@ -67,7 +70,7 @@ class RoomGraph():
             valid_neighbors = self.get_valid_neighbors(current_room, visited)
 
             if valid_neighbors:
-                random_neighbor, random_direction = random.choice(
+                random_neighbor, random_direction = self.select_neighbor(
                     valid_neighbors)
                 stack.append((current_room, random_direction))
                 current_room = random_neighbor

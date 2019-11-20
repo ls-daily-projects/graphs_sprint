@@ -1,3 +1,4 @@
+from time import time
 from player import Player
 from world import World
 
@@ -27,14 +28,36 @@ for room_1_id, data in selected_graph.items():
 
 traversal_path = room_graph.traverse_rooms_df()
 shortest_path = len(traversal_path)
+new_length = shortest_path
 
-while shortest_path > 960:
+max_moves = 999
+with open("last_shortest_path.txt", "r") as f:
+    max_moves = int(f.readline()) - 6
+
+t1 = time()
+while shortest_path >= max_moves:
     traversal_path = room_graph.traverse_rooms_df()
-
-    if len(traversal_path) < shortest_path:
-        shortest_path = len(traversal_path)
+    new_length = len(traversal_path)
+    if new_length < shortest_path:
+        shortest_path = new_length
         print(shortest_path)
 
+t2 = time()
+seconds = round(t2 - t1, 4)
+print(f"Shortest Path found in: {seconds}s")
+
+with open("last_shortest_path.txt", "w") as f:
+    f.write(f"{new_length}\n")
+
+with open("shortest_path.md", "w") as f:
+    f.write("# Graph Traversal Sprint\n\n")
+    f.write("| # of Moves | Search Time (in seconds) \n")
+    f.write("|:--:|:--:|\n")
+    f.write(f"| {new_length} | {seconds}s |\n")
+    f.write("## Traversal Path Sequence\n")
+    f.write("```\n[\n")
+    f.write(",".join(traversal_path))
+    f.write("\n]\n```")
 
 # print(f"Traversal Path:\n----{traversal_path}")
 test_traversal(world, player, selected_graph, traversal_path)
