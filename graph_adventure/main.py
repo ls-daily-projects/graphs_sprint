@@ -26,6 +26,14 @@ for room_1_id, data in selected_graph.items():
         room_graph.add_room_neighbor(room_1_id, neighbor_id, direction)
 
 traversal_path = room_graph.traverse_rooms_df()
+shortest_path = len(traversal_path)
+
+while shortest_path > 960:
+    traversal_path = room_graph.traverse_rooms_df()
+
+    if len(traversal_path) < shortest_path:
+        shortest_path = len(traversal_path)
+        print(shortest_path)
 
 
 # print(f"Traversal Path:\n----{traversal_path}")
