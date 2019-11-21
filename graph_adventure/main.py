@@ -1,3 +1,5 @@
+import sys
+import os
 from time import time
 from player import Player
 from world import World
@@ -8,59 +10,76 @@ from room_graph import RoomGraph
 from traversal_test import test_traversal
 
 
-# Load world
-world = World()
-selected_graph = five_hundy
+def create_world_from_graph(graph):
+    world = World()
+    world.loadGraph(graph)
+    world.printRooms()
+    return world
 
-world.loadGraph(selected_graph)
-world.printRooms()
-player = Player("Name", world.startingRoom)
 
-# Build room graph
-room_graph = RoomGraph()
+def create_player_in_world(player_name, world):
+    return Player(player_name, world.startingRoom)
 
-for room_1_id, data in selected_graph.items():
-    coordinates, edges = data
-    room_graph.add_room(room_1_id)
 
-    for direction, neighbor_id in edges.items():
-        room_graph.add_room_neighbor(room_1_id, neighbor_id, direction)
+def create_room_graph(graph_data):
+    room_graph = RoomGraph()
 
-traversal_path = room_graph.traverse_rooms_df()
-shortest_path = len(traversal_path)
-new_length = shortest_path
+    for room_1_id, data in graph_data.items():
+        coordinates, edges = data
+        room_graph.add_room(room_1_id)
 
-max_moves = 999
-with open("last_shortest_path.txt", "r") as f:
-    max_moves = int(f.readline()) - 6
+        for direction, neighbor_id in edges.items():
+            room_graph.add_room_neighbor(room_1_id, neighbor_id, direction)
 
-t1 = time()
-while shortest_path >= max_moves:
-    traversal_path = room_graph.traverse_rooms_df()
-    new_length = len(traversal_path)
-    if new_length < shortest_path:
-        shortest_path = new_length
-        print(shortest_path)
+    return room_graph
 
-t2 = time()
-seconds = round(t2 - t1, 4)
-print(f"Shortest Path found in: {seconds}s")
 
-with open("last_shortest_path.txt", "w") as f:
-    f.write(f"{new_length}\n")
+def get_last_shortest_move_count(filename="last_shortest_path.txt"):
+    max_moves = 1000
+    with open(filename, "r") as f:
+        max_moves = int(f.readline())
+    return max_moves
 
-with open("shortest_path.md", "w") as f:
-    f.write("# Graph Traversal Sprint\n\n")
-    f.write("| # of Moves | Search Time (in seconds) \n")
-    f.write("|:--:|:--:|\n")
-    f.write(f"| {new_length} | {seconds}s |\n")
-    f.write("## Traversal Path Sequence\n")
-    f.write("```\n[\n")
-    f.write(",".join(traversal_path))
-    f.write("\n]\n```")
 
-# print(f"Traversal Path:\n----{traversal_path}")
-test_traversal(world, player, selected_graph, traversal_path)
+def print_shortest_move_count(path, elapsed_time):
+    print(f"{len(path)} moves in {elapsed_time}s")
+
+
+def record_shortest_move_count(path, elapsed_time, filename="last_shortest_path.txt"):
+    with open(filename, "w") as f:
+        f.write(f"{len(path)}\n")
+
+
+def record_shortest_path(path, elapsed_time, filename="shortest_path.md"):
+    with open(filename, "w") as f:
+        f.write("# Graph Traversal Sprint\n\n")
+        f.write("| # of Moves | Search Time (in seconds) \n")
+        f.write("|:--:|:--:|\n")
+        f.write(f"| {len(path)} | {elapsed_time}s |\n")
+        f.write("## Traversal Path Sequence\n")
+        f.write("```python3\n[\n")
+        f.write(",".join(path))
+        f.write("\n]\n```")
+
+
+def find_shorter_move_count(room_graph, last_shortest_path_count, callbacks=[]):
+    path = []
+    shortest_path_count = last_shortest_path_count
+    t1 = time()
+    while shortest_path_count >= last_shortest_path_count:
+        path = room_graph.traverse_rooms_df()
+        new_count = len(path)
+
+        if new_count < shortest_path_count:
+            shortest_path_count = new_count
+            t2 = time()
+            for cb in callbacks:
+                cb(path, round(t2 - t1, 4))
+
+    t3 = time()
+    for cb in callbacks:
+        cb(path, round(t3 - t1, 4))
+    return path
 
 #######
 # UNCOMMENT TO WALK AROUND
@@ -72,3 +91,15 @@ test_traversal(world, player, selected_graph, traversal_path)
 #         player.travel(cmds[0], True)
 #     else:
 #         print("I did not understand that command.")
+
+
+if __name__ == '__main__':
+    selected_graph = five_hundy
+    world = create_world_from_graph(selected_graph)
+    player = create_player_in_world("Mikis", world)
+    room_graph = create_room_graph(selected_graph)
+    shortest_move_count = get_last_shortest_move_count()
+    path = find_shorter_move_count(
+        room_graph, shortest_move_count, [record_shortest_move_count, record_shortest_path, print_shortest_move_count])
+
+    test_traversal(world, player, selected_graph, path)
