@@ -3,3 +3,4 @@ graph_adventure/__pycache__/*
 map.txt
 .vscode/
 __pycache__
+.DS_Store
